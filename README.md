@@ -1,43 +1,72 @@
-# 2-Tier AWS Infrastructure Automation
+# 🗳️ PipelineVote
 
-Automated deployment of a secure 2-tier application (VotingApp) on AWS using Terraform, Ansible, and Jenkins.
+A production-ready, highly secure, and fully automated infrastructure for a Spring Boot Java Voting Application.
 
-## Prerequisites
-- AWS CLI configured with appropriate credentials.
-- Terraform v1.x+
-- Ansible v2.x+
-- Jenkins server (optional, for CI/CD).
-- Pre-commit installed.
+[![Terraform](https://img.shields.io/badge/Infrastructure-Terraform-623CE4?logo=terraform)](https://www.terraform.io/)
+[![AWS](https://img.shields.io/badge/Cloud-AWS-232F3E?logo=amazon-aws)](https://aws.amazon.com/)
+[![Jenkins](https://img.shields.io/badge/CI%2FCD-Jenkins-D24939?logo=jenkins)](https://www.jenkins.io/)
 
-## Project Structure
-- `terraform/`: Infrastructure as Code modules.
-- `ansible/`: Configuration management roles and playbooks.
-- `VotingApp/`: Spring Boot application source code.
-- `Jenkinsfile`: CI/CD pipeline definition.
-- `.pre-commit-config.yaml`: Security scanning configuration.
+---
 
-## Setup Instructions
+## 🌟 Key Features
 
-### 1. Infrastructure Provisioning
-```bash
-cd terraform
-terraform init
-terraform apply -auto-approve
+- **Multi-Environment Support**: Seamlessly manage `dev`, `staging`, and `prod` using dedicated `.tfvars` configurations.
+- **Dynamic Scaling**: Application tier powered by **Auto Scaling Groups (ASG)** for 99.9% availability.
+- **Zero-Secrets Policy**: Automated DB credential generation via **AWS Secrets Manager** and endpoint discovery via **SSM**.
+- **Edge Security**: Load Balancer protected by **IP Allow Listing** and SSL/TLS termination.
+- **Observability**: **ALB Access Logging** enabled with automatic 90-day S3 lifecycle retention.
+- **Remote State Management**: Collaborative Terraform state locking using **S3** and **DynamoDB**.
+
+---
+
+## 📂 Project Structure
+
+```text
+PipelineVote/
+├── app/               # ☕ Java Spring Boot Application
+├── infrastructure/    # 🏗️ IaC & Config Management
+│   ├── terraform/     #   - Terraform Modules (VPC, RDS, ALB, ASG)
+│   └── ansible/       #   - Automation Playbooks
+├── cicd/              # 🔄 Pipeline Definitions
+│   └── Jenkinsfile    #   - Multi-Environment Jenkins Pipeline
+├── docs/              # 📖 Comprehensive Documentation
+│   ├── Architecture.md
+│   ├── Deployment.md
+│   └── Troubleshooting.md
+└── README.md          # 🚀 Project Overview
 ```
 
-### 2. Configuration Management
-Ensure the `aws_ec2.yml` inventory is configured correctly, then run:
-```bash
-cd ansible
-ansible-playbook -i aws_ec2.yml playbook.yml
-```
+---
 
-### 3. CI/CD Pipeline
-Commit the code to a GitHub repository and point Jenkins to the `Jenkinsfile`. Ensure Jenkins has the necessary AWS credentials and SSH keys.
+## 🛠️ Quick Start
 
-## Security Features
-- **Network Isolation**: Databases and application servers are in private subnets.
-- **Secret Management**: RDS credentials are stored in AWS Secrets Manager.
-- **SSM Management**: No SSH keys required; instances are managed via AWS Systems Manager.
-- **Static Analysis**: Pre-commit hooks for secret detection and Terraform linting.
-```
+1. **Configure Infrastructure**:
+   ```bash
+   cd infrastructure/terraform
+   cp terraform.tfvars.example dev.tfvars
+   # Fill in your domain_name and zone_id
+   ```
+
+2. **Deploy to Dev**:
+   ```bash
+   terraform apply -var-file=envs/dev.tfvars
+   ```
+
+3. **CI/CD Integration**:
+   - Create a Jenkins Pipeline job.
+   - Point to `cicd/Jenkinsfile`.
+   - Run with parameters for automated `plan` and `apply`.
+
+---
+
+## 📚 Deep Dive Documentation
+
+- 🔗 **[Architecture Documentation](./docs/Architecture.md)**: Explore the design decisions and data flows.
+- 🚀 **[Deployment Guide](./docs/Deployment.md)**: Step-by-step instructions for a clean setup.
+- 🔧 **[Troubleshooting](./docs/Troubleshooting.md)**: Common issues and how to fix them.
+
+---
+
+## 🛡️ Security Note
+
+This project strictly follows the **Principle of Least Privilege**. All compute resources are isolated in private subnets, and access is managed via restricted IAM policies and security group white-listing.

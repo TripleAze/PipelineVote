@@ -12,7 +12,7 @@ crash.*.log
 *.tfvars
 *.tfvars.json
 # BUT do not ignore the example file
-!terraform/terraform.tfvars.example
+!infrastructure/terraform/terraform.tfvars.example
 
 # Terraform lock file
 # Decisions vary, but often kept in git for consistency. 
@@ -36,8 +36,6 @@ target/
 *.jar
 *.war
 *.ear
-
-
 
 # --- OS Junk ---
 .DS_Store
