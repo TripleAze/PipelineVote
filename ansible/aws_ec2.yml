@@ -1,0 +1,12 @@
+plugin: aws_ec2
+regions:
+  - eu-west-2
+filters:
+  tag:Project: voting-app
+  instance-state-name: [running]
+hostnames:
+  - tag:Name
+compose:
+  ansible_host: private_ip_address
+groups:
+  app_servers: "'app' in tags.Role"

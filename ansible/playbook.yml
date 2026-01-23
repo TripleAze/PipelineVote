@@ -1,0 +1,12 @@
+---
+- name: Deploy Voting Application
+  hosts: app_servers
+  gather_facts: yes
+  vars:
+    # These variables should be passed at runtime or fetched from Secrets Manager
+    db_url: "jdbc:mysql://{{ db_host }}:3306/votingdb?useSSL=false&allowPublicKeyRetrieval=true"
+    db_username: "{{ db_user }}"
+    db_password: "{{ db_pass }}"
+  roles:
+    - common
+    - app

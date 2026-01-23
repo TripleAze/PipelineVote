@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{user/base::layout(~{::section})}">
+<head>
+  <meta charset="UTF-8" />
+  <title>User Dashboard</title>
+</head>
+<body>
+<section class="container mt-5">
+
+  <div class="row justify-content-center">
+
+    <!-- User Details Card -->
+    <div class="col-md-4 mb-4">
+      <div class="card shadow">
+        <div class="card-body text-center">
+          <h3 class="card-title mb-3">User Details</h3>
+          <img th:src="@{/image/user.png}" class="rounded-circle mb-3" height="100px" alt="User Icon" />
+          <table class="table table-bordered">
+            <tbody>
+              <tr><th>Name</th><td th:text="${user.name}"></td></tr>
+              <tr><th>Email</th><td th:text="${user.email}"></td></tr>
+              <tr><th>Phone</th><td th:text="${user.phone}"></td></tr>
+              <tr>
+                <th>Status</th>
+                <td>
+                  <span th:if="${user.status}" class="badge bg-success" th:text="${user.status}"></span>
+                  <span th:unless="${user.status}" class="badge bg-secondary">Not Voted</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Voting Form -->
+    <div class="col-md-4 mb-4">
+      <div class="card shadow p-4">
+        <form th:action="@{/addcandidate}" method="post">
+          <input type="hidden" name="email" th:value="${user.email}" />
+          
+          <div th:unless="${user.status}">
+            <h4 class="mb-3">Cast Your Vote</h4>
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="radio" id="candidate1" name="candidate" value="candidate1" required>
+              <label class="form-check-label" for="candidate1">Candidate 1</label>
+            </div>
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="radio" id="candidate2" name="candidate" value="candidate2" required>
+              <label class="form-check-label" for="candidate2">Candidate 2</label>
+            </div>
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="radio" id="candidate3" name="candidate" value="candidate3" required>
+              <label class="form-check-label" for="candidate3">Candidate 3</label>
+            </div>
+            <div class="form-check mb-3">
+              <input class="form-check-input" type="radio" id="candidate4" name="candidate" value="candidate4" required>
+              <label class="form-check-label" for="candidate4">Candidate 4</label>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Submit Vote</button>
+          </div>
+
+          <div th:if="${user.status}">
+            <div class="alert alert-success">
+              You have already voted: <strong th:text="${user.status}"></strong>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</section>
+</body>
+</html>

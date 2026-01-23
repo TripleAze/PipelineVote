@@ -1,0 +1,57 @@
+# --- Terraform ---
+# Local state files
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+
+# .terraform directory
+.terraform/
+
+# .tfvars files (sensitive)
+*.tfvars
+*.tfvars.json
+# BUT do not ignore the example file
+!terraform/terraform.tfvars.example
+
+# Terraform lock file
+# Decisions vary, but often kept in git for consistency. 
+# Remove the hash below if you want to ignore it.
+#.terraform.lock.hcl
+
+# --- Jenkins ---
+# Jenkins workspace and internal data
+*.log
+jenkins.war
+work/
+secret.key
+secret.key.not-so-secret
+
+# --- Ansible ---
+*.retry
+
+# --- Java / Maven (for VotingApp) ---
+target/
+*.class
+*.jar
+*.war
+*.ear
+
+
+
+# --- OS Junk ---
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# --- Miscellaneous ---
+.env
+.env.local
+.python-version
+__pycache__/
+node_modules/
+dist/

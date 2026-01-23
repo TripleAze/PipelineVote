@@ -1,0 +1,11 @@
+---
+- name: reload systemd
+  systemd:
+    daemon_reload: yes
+  become: yes
+
+- name: restart voting-app
+  systemd:
+    name: voting-app
+    state: restarted
+  become: yes

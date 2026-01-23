@@ -1,0 +1,15 @@
+[Unit]
+Description=Voting Application
+After=network.target
+
+[Service]
+User=ubuntu
+WorkingDirectory=/opt/voting-app
+Environment="DB_URL={{ db_url }}"
+Environment="DB_USERNAME={{ db_username }}"
+Environment="DB_PASSWORD={{ db_password }}"
+ExecStart=/usr/bin/java -jar /opt/voting-app/voting-app.jar
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

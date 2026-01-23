@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{base::layout(~{::section})}">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login</title>
+</head>
+<body>
+<section class="container mt-5" style="max-width: 400px;">
+
+  <h1 class="mb-4 text-center">Login</h1>
+
+  <div th:if="${session.vmsg}">
+    <div class="alert alert-info" role="alert" th:text="${session.vmsg}"></div>
+    <th:block th:text="${#session.removeAttribute('vmsg')}"></th:block>
+  </div>
+
+  <div th:if="${param.error}" class="alert alert-danger" role="alert">
+    Invalid username and password
+  </div>
+
+  <div th:if="${param.logout}" class="alert alert-success" role="alert">
+    You have been successfully logged out...
+  </div>
+
+  <form th:action="@{/dologin}" method="post">
+    <div class="mb-3">
+      <label for="username" class="form-label">Email Id</label>
+      <input id="username" name="username" type="text" placeholder="Enter Your Email Id" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+      <label for="password" class="form-label">Password</label>
+      <input id="password" name="password" type="password" placeholder="Enter Your Password" class="form-control" required />
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100">Login</button>
+  </form>
+
+  <hr class="my-4" />
+  
+  <div class="text-danger text-center">
+    <h4>For Signing-in as Admin</h4>
+    <p>Email Id: <strong>admin</strong></p>
+    <p>Password: <strong>admin</strong></p>
+  </div>
+
+</section>
+</body>
+</html>

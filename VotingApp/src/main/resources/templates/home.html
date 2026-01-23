@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{base::layout(~{::section})}">
+<head>
+	<meta charset="UTF-8" />
+	<title>Home</title>
+</head>
+<body>
+	<section class="center">
+		<div class="text-center">
+
+			<h1 class="font-weight-bold">Welcome to the Voting Application</h1>
+
+			<p style="max-width: 800px; margin: 20px auto; font-size: 1.1rem; line-height: 1.6;">
+				This platform enables users to participate in secure and transparent voting processes online. 
+				You can register, log in, and cast your vote with just a few clicks. 
+				Each user gets one vote, and the results are immediately visible to the admin.
+				Let's make democracy digital and more accessible to everyone!
+			</p>
+
+			<!-- Optional session message -->
+			<div th:if="${session.msg}">
+				<h3 th:text="${session.msg}" style="color:red"></h3>
+				<th:block th:text="${#session.removeAttribute('msg')}"></th:block>
+			</div>	
+
+		</div>
+	</section>
+</body>
+</html>

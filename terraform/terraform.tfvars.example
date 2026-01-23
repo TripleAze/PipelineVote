@@ -1,0 +1,14 @@
+# Project Configuration
+project_name = "voting-app"
+region       = "eu-west-2"
+environment  = "dev" # Change to staging or prod as needed
+
+# Network & Domain
+zone_id     = "Z0123456789ABCDEF"
+domain_name = "voting-portal.chickenkiller.com"
+
+# Instance Configuration
+ami_id = "ami-09a2a0f7d2db8baca"
+
+# Security
+allowed_ips = ["your-ip-here/32"]
