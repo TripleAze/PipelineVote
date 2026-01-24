@@ -1,0 +1,66 @@
+---
+- name: Install Jenkins dependencies
+  apt:
+    name:
+      - fontconfig
+      - openjdk-17-jre
+    state: present
+  become: yes
+
+- name: Add Jenkins repository key
+  apt_key:
+    url: https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+    state: present
+  become: yes
+
+- name: Add Jenkins repository
+  apt_repository:
+    repo: deb https://pkg.jenkins.io/debian-stable binary/
+    state: present
+  become: yes
+
+- name: Install Jenkins
+  apt:
+    name: jenkins
+    state: present
+  become: yes
+
+- name: Configure Jenkins prefix
+  lineinfile:
+    path: /lib/systemd/system/jenkins.service
+    regexp: '^Environment="JENKINS_PREFIX='
+    line: 'Environment="JENKINS_PREFIX=/jenkins"'
+  become: yes
+  notify:
+    - reload systemd
+    - restart jenkins
+
+- name: Ensure Jenkins is started and enabled
+  systemd:
+    name: jenkins
+    enabled: yes
+    state: started
+  become: yes
+
+- name: Wait for Jenkins initialAdminPassword file to be created
+  wait_for:
+    path: /var/lib/jenkins/secrets/initialAdminPassword
+    state: present
+    timeout: 300
+  become: yes
+
+- name: Read Jenkins initial admin password
+  slurp:
+    src: /var/lib/jenkins/secrets/initialAdminPassword
+  register: jenkins_password_b64
+  become: yes
+
+- name: Store Jenkins admin password in SSM
+  community.aws.ssm_parameter:
+    name: "/voting-app-dev/jenkins_admin_password"
+    description: "Initial Jenkins Admin Password"
+    value: "{{ jenkins_password_b64.content | b64decode | trim }}"
+    string_type: "SecureString"
+    region: "eu-west-2"
+    overwrite: yes
+  delegate_to: localhost

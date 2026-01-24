@@ -2,11 +2,15 @@ plugin: aws_ec2
 regions:
   - eu-west-2
 filters:
-  tag:Project: voting-app
+  tag:Project: voting-app-dev
   instance-state-name: [running]
 hostnames:
   - tag:Name
 compose:
-  ansible_host: private_ip_address
+  ansible_host: instance_id
+  ansible_connection: aws_ssm
+  ansible_shell_type: sh
+  ansible_aws_ssm_region: eu-west-2
 groups:
   app_servers: "'app' in tags.Role"
+  jenkins_servers: "'jenkins' in tags.Role"

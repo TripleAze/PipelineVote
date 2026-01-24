@@ -9,7 +9,7 @@
 
 - name: Copy application JAR
   copy:
-    src: VotingApp-0.0.1-SNAPSHOT.jar
+    src: "{{ artifact_path }}"
     dest: /opt/voting-app/voting-app.jar
     owner: ubuntu
     group: ubuntu

@@ -48,6 +48,28 @@ pipeline {
             }
         }
 
+        stage('Build Application') {
+            when {
+                expression { params.ACTION == 'apply' }
+            }
+            steps {
+                dir('app') {
+                    sh './mvnw clean package -DskipTests'
+                }
+            }
+        }
+
+        stage('Deploy Application') {
+            when {
+                expression { params.ACTION == 'apply' }
+            }
+            steps {
+                dir('infrastructure/ansible') {
+                    sh "ansible-playbook -i aws_ec2.yml playbook.yml"
+                }
+            }
+        }
+
         stage('Terraform Destroy') {
             when {
                 expression { params.ACTION == 'destroy' }

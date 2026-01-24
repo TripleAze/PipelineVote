@@ -44,3 +44,9 @@ variable "environment" {
   description = "Environment name"
   type        = string
 }
+
+variable "key_name" {
+  description = "SSH key pair name"
+  type        = string
+  default     = null
+}

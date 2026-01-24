@@ -38,3 +38,9 @@ variable "allowed_ips" {
   type        = list(string)
   default     = ["0.0.0.0/0"] # Default to open, but documented as restricted
 }
+
+variable "github_repo" {
+  description = "GitHub repository (owner/repo)"
+  type        = string
+  default     = "TripleAze/PipelineVote"
+}
