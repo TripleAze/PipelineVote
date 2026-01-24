@@ -9,8 +9,7 @@ hostnames:
 compose:
   ansible_host: instance_id
   ansible_connection: aws_ssm
-  ansible_shell_type: sh
-  ansible_aws_ssm_region: eu-west-2
+  ansible_shell_type: bash
 groups:
   app_servers: "'app' in tags.Role"
   jenkins_servers: "'jenkins' in tags.Role"
