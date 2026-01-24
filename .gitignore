@@ -17,6 +17,10 @@ crash.*.log
 # Terraform lock file
 .terraform.lock.hcl
 
+# Terraform plan files
+tfplan*
+*-oidc
+
 # --- Jenkins ---
 # Jenkins workspace and internal data
 *.log
@@ -27,13 +31,22 @@ secret.key.not-so-secret
 
 # --- Ansible ---
 *.retry
+# Ignore downloaded session manager plugin
+session-manager-plugin.deb
 
-# --- Java / Maven (for VotingApp) ---
+# --- Java / Maven ---
 target/
+app/target/
+VotingApp/target/
 *.class
 *.jar
 *.war
 *.ear
+
+# --- Secrets ---
+.secrets.baseline
+.env
+.env.local
 
 # --- OS Junk ---
 .DS_Store
@@ -45,8 +58,6 @@ ehthumbs.db
 Thumbs.db
 
 # --- Miscellaneous ---
-.env
-.env.local
 .python-version
 __pycache__/
 node_modules/
