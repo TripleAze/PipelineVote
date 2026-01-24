@@ -66,6 +66,19 @@ resource "aws_iam_role_policy" "github_actions_ssm" {
         ]
         Effect = "Allow"
         Resource = "arn:aws:ssm:${var.region}:${var.account_id}:parameter/${var.project_name}/*"
+      },
+      {
+        Action = [
+          "s3:GetObject",
+          "s3:PutObject",
+          "s3:ListBucket",
+          "s3:DeleteObject"
+        ]
+        Effect   = "Allow"
+        Resource = [
+          var.ssm_transport_bucket_arn,
+          "${var.ssm_transport_bucket_arn}/*"
+        ]
       }
     ]
   })

@@ -14,6 +14,25 @@ resource "aws_iam_openid_connect_provider" "github" {
   thumbprint_list = ["6938fd4d98bab03faadb97b34396831e3780aea1", "1c58a3a8518e8759bf075b76b750d4f2df264fcd"]
 }
 
+resource "aws_s3_bucket" "ansible_ssm" {
+  bucket        = "${var.project_name}-ansible-ssm-transport"
+  force_destroy = true
+
+  tags = {
+    Name        = "Ansible SSM Transport"
+    Project     = var.project_name
+    Environment = var.environment
+  }
+}
+
+resource "aws_s3_bucket_public_access_block" "ansible_ssm" {
+  bucket                  = aws_s3_bucket.ansible_ssm.id
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
 module "iam" {
   source                      = "./modules/iam"
   project_name                = var.project_name
@@ -22,6 +41,7 @@ module "iam" {
   openid_connect_provider_arn = aws_iam_openid_connect_provider.github.arn
   region                      = var.region
   account_id                  = data.aws_caller_identity.current.account_id
+  ssm_transport_bucket_arn    = aws_s3_bucket.ansible_ssm.arn
 }
 
 # --- Security Groups ---
@@ -166,6 +186,7 @@ module "ec2" {
   subnet_ids            = module.vpc.private_subnet_ids
   secret_arns           = [module.secrets.secret_arn]
   app_target_group_arns = [module.alb.app_target_group_arn]
+  ssm_transport_bucket_arn = aws_s3_bucket.ansible_ssm.arn
   instances = {
     "jenkins-server" = {
       instance_type      = "t3.medium"

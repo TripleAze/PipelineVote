@@ -23,3 +23,8 @@ variable "region" {
 variable "account_id" {
   type = string
 }
+
+variable "ssm_transport_bucket_arn" {
+  type        = string
+  description = "ARN of the S3 bucket for Ansible SSM transport"
+}

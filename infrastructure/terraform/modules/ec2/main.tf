@@ -15,6 +15,28 @@ resource "aws_iam_role" "ec2_role" {
   })
 }
 
+resource "aws_iam_role_policy" "ec2_s3_transport" {
+  name = "ansible-s3-transport"
+  role = aws_iam_role.ec2_role.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "s3:GetObject",
+          "s3:ListBucket"
+        ]
+        Effect = "Allow"
+        Resource = [
+          var.ssm_transport_bucket_arn,
+          "${var.ssm_transport_bucket_arn}/*"
+        ]
+      }
+    ]
+  })
+}
+
 resource "aws_iam_role_policy_attachment" "ssm_policy" {
   role       = aws_iam_role.ec2_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"

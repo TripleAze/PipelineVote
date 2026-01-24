@@ -50,3 +50,8 @@ variable "key_name" {
   type        = string
   default     = null
 }
+
+variable "ssm_transport_bucket_arn" {
+  description = "ARN of the S3 bucket for Ansible SSM transport"
+  type        = string
+}
