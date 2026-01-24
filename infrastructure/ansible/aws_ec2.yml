@@ -2,7 +2,21 @@ plugin: amazon.aws.aws_ec2
 regions:
   - eu-west-2
 
+filters:
+  tag:Project: voting-app-dev
+  instance-state-name: [running]
+
+hostnames:
+  - tag:Name
+
 compose:
+  ansible_host: instance_id
   ansible_connection: amazon.aws.aws_ssm
+  ansible_user: ubuntu
   ansible_aws_ssm_bucket: voting-app-dev-alb-logs-voting-app-dev
   ansible_aws_ssm_region: eu-west-2
+
+keyed_groups:
+  - key: tags.Role
+    prefix: role
+    separator: "_"
