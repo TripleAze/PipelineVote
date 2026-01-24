@@ -2,6 +2,7 @@
 - name: Deploy Voting Application
   hosts: role_app
   connection: community.aws.aws_ssm
+  remote_user: ubuntu
   gather_facts: yes
   pre_tasks:
     - name: Fetch DB host from SSM
@@ -20,6 +21,7 @@
 - name: Setup Jenkins Server
   hosts: role_jenkins
   connection: community.aws.aws_ssm
+  remote_user: ubuntu
   gather_facts: yes
   roles:
     - common
