@@ -63,3 +63,5 @@ jobs:
         env:
           AWS_REGION: eu-west-2
           ANSIBLE_HOST_KEY_CHECKING: "False"
+          ANSIBLE_AWS_SSM_BUCKET_NAME: voting-app-dev-alb-logs-voting-app-dev
+          ANSIBLE_AWS_SSM_REGION: eu-west-2
