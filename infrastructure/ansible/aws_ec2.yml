@@ -8,7 +8,7 @@ hostnames:
   - tag:Name
 compose:
   ansible_host: instance_id
-  ansible_connection: aws_ssm
+  ansible_connection: community.aws.aws_ssm
   ansible_shell_type: bash
 keyed_groups:
   - key: tags.Role
