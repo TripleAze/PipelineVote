@@ -23,28 +23,36 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: eu-west-2
 
-      - name: Install Ansible, boto3, and SSM Plugin
+      - name: Install System Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y ansible python3-boto3 python3-botocore
+          sudo apt-get install -y ansible python3-pip python3-boto3 python3-botocore
           curl "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/ubuntu_64bit/session-manager-plugin.deb" -o "session-manager-plugin.deb"
           sudo dpkg -i session-manager-plugin.deb
 
-      - name: Install Ansible AWS Collection
+      - name: Install Ansible Galaxy Collections
         run: |
-          ansible-galaxy collection install amazon.aws community.aws
+          ansible-galaxy collection install amazon.aws community.aws --force
 
-      - name: Debug Ansible Inventory
+      - name: Verify Python and Ansible Environment
+        run: |
+          python3 -c "import boto3, botocore; print('boto3 version:', boto3.__version__)"
+          ansible --version
+          ansible-galaxy collection list
+
+      - name: List Ansible Inventory
         run: |
           cd infrastructure/ansible
-          ansible-inventory -i aws_ec2.yml --graph
+          ansible-inventory -i aws_ec2.yml --list
         env:
           ANSIBLE_PYTHON_INTERPRETER: /usr/bin/python3
+          AWS_REGION: eu-west-2
 
       - name: Run Bootstrap Playbook
         run: |
           cd infrastructure/ansible
-          ansible-playbook -i aws_ec2.yml playbook.yml
+          ansible-playbook -i aws_ec2.yml playbook.yml -vv
         env:
           ANSIBLE_PYTHON_INTERPRETER: /usr/bin/python3
           ANSIBLE_HOST_KEY_CHECKING: "False"
+          AWS_REGION: eu-west-2
