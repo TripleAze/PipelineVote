@@ -9,7 +9,8 @@ hostnames:
 compose:
   ansible_host: instance_id
   ansible_connection: aws_ssm
-  ansible_user: "'ubuntu'"
+  ansible_user: ubuntu
+  ansible_aws_ssm_bucket: voting-app-dev-alb-logs-voting-app-dev
 keyed_groups:
   - key: tags.Role
     prefix: role
