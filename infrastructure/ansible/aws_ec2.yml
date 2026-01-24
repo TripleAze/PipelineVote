@@ -8,9 +8,7 @@ hostnames:
   - tag:Name
 compose:
   ansible_host: instance_id
-  ansible_connection: community.aws.aws_ssm
-  ansible_user: "'ubuntu'"
-  ansible_shell_type: bash
+  ansible_connection: aws_ssm
 keyed_groups:
   - key: tags.Role
     prefix: role
