@@ -1,6 +1,6 @@
 ---
 - name: Deploy Voting Application
-  hosts: app_servers
+  hosts: role_app
   gather_facts: yes
   pre_tasks:
     - name: Fetch DB host from SSM
@@ -17,7 +17,7 @@
     - app
 
 - name: Setup Jenkins Server
-  hosts: jenkins_servers
+  hosts: role_jenkins
   gather_facts: yes
   roles:
     - common

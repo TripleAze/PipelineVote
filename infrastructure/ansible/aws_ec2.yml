@@ -10,6 +10,7 @@ compose:
   ansible_host: instance_id
   ansible_connection: aws_ssm
   ansible_shell_type: bash
-groups:
-  app_servers: "'app' in tags.Role"
-  jenkins_servers: "'jenkins' in tags.Role"
+keyed_groups:
+  - key: tags.Role
+    prefix: role
+    separator: "_"

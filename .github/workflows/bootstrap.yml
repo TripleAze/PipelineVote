@@ -40,10 +40,15 @@ jobs:
           ansible --version
           ansible-galaxy collection list
 
-      - name: List Ansible Inventory
+      - name: Verify and List Ansible Inventory
         run: |
           cd infrastructure/ansible
-          ansible-inventory -i aws_ec2.yml --list
+          ansible-inventory -i aws_ec2.yml --graph
+          # Validate that role_jenkins group is not empty
+          if ! ansible-inventory -i aws_ec2.yml --list | grep -q "role_jenkins"; then
+            echo "::error::No jenkins servers found in inventory! Check EC2 tags and IAM permissions."
+            exit 1
+          fi
         env:
           ANSIBLE_PYTHON_INTERPRETER: /usr/bin/python3
           AWS_REGION: eu-west-2
