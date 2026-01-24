@@ -26,7 +26,10 @@ jobs:
       - name: Install System Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y ansible python3-pip python3-boto3 python3-botocore
+          sudo apt-get install -y pipx
+          # Inject boto3 into the pre-installed Ansible environment
+          pipx inject ansible-core boto3 botocore || pipx inject ansible boto3 botocore
+          # Ensure SSM plugin is installed
           curl "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/ubuntu_64bit/session-manager-plugin.deb" -o "session-manager-plugin.deb"
           sudo dpkg -i session-manager-plugin.deb
 
@@ -34,23 +37,17 @@ jobs:
         run: |
           ansible-galaxy collection install amazon.aws community.aws --force
 
-      - name: Verify Python and Ansible Environment
+      - name: Verify Environment and Inventory
         run: |
-          python3 -c "import boto3, botocore; print('boto3 version:', boto3.__version__)"
+          which ansible
           ansible --version
-          ansible-galaxy collection list
-
-      - name: Verify and List Ansible Inventory
-        run: |
           cd infrastructure/ansible
           ansible-inventory -i aws_ec2.yml --graph
-          # Validate that role_jenkins group is not empty
           if ! ansible-inventory -i aws_ec2.yml --list | grep -q "role_jenkins"; then
-            echo "::error::No jenkins servers found in inventory! Check EC2 tags and IAM permissions."
+            echo "::error::No jenkins servers found! Check EC2 tags and IAM permissions."
             exit 1
           fi
         env:
-          ANSIBLE_PYTHON_INTERPRETER: /usr/bin/python3
           AWS_REGION: eu-west-2
 
       - name: Run Bootstrap Playbook
@@ -58,6 +55,5 @@ jobs:
           cd infrastructure/ansible
           ansible-playbook -i aws_ec2.yml playbook.yml -vv
         env:
-          ANSIBLE_PYTHON_INTERPRETER: /usr/bin/python3
           ANSIBLE_HOST_KEY_CHECKING: "False"
           AWS_REGION: eu-west-2
