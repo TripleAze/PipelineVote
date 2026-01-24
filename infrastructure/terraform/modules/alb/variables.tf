@@ -21,6 +21,7 @@ variable "project_name" {
 variable "certificate_arn" {
   description = "ARN of the ACM certificate"
   type        = string
+  default     = null
 }
 
 variable "domain_name" {
@@ -32,4 +33,5 @@ variable "domain_name" {
 variable "zone_id" {
   description = "Route 53 hosted zone ID"
   type        = string
+  default     = null
 }

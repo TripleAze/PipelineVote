@@ -11,4 +11,4 @@ domain_name = "voting-portal.chickenkiller.com"
 ami_id = "ami-09a2a0f7d2db8baca"
 
 # Security
-allowed_ips = ["your-ip-here/32"]
+allowed_ips = ["0.0.0.0/32"]

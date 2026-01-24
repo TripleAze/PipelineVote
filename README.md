@@ -1,4 +1,4 @@
-# 🗳️ PipelineVote
+# PipelineVote
 
 A production-ready, highly secure, and fully automated infrastructure for a Spring Boot Java Voting Application.
 
@@ -8,7 +8,7 @@ A production-ready, highly secure, and fully automated infrastructure for a Spri
 
 ---
 
-## 🌟 Key Features
+## Key Features
 
 - **Multi-Environment Support**: Seamlessly manage `dev`, `staging`, and `prod` using dedicated `.tfvars` configurations.
 - **Dynamic Scaling**: Application tier powered by **Auto Scaling Groups (ASG)** for 99.9% availability.
@@ -19,26 +19,26 @@ A production-ready, highly secure, and fully automated infrastructure for a Spri
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 ```text
 PipelineVote/
-├── app/               # ☕ Java Spring Boot Application
-├── infrastructure/    # 🏗️ IaC & Config Management
+├── app/               # Java Spring Boot Application
+├── infrastructure/    # IaC & Config Management
 │   ├── terraform/     #   - Terraform Modules (VPC, RDS, ALB, ASG)
 │   └── ansible/       #   - Automation Playbooks
-├── cicd/              # 🔄 Pipeline Definitions
+├── cicd/              # Pipeline Definitions
 │   └── Jenkinsfile    #   - Multi-Environment Jenkins Pipeline
-├── docs/              # 📖 Comprehensive Documentation
+├── docs/              # Comprehensive Documentation
 │   ├── Architecture.md
 │   ├── Deployment.md
 │   └── Troubleshooting.md
-└── README.md          # 🚀 Project Overview
+└── README.md          # Project Overview
 ```
 
 ---
 
-## 🛠️ Quick Start
+## Quick Start
 
 1. **Configure Infrastructure**:
    ```bash
@@ -59,14 +59,14 @@ PipelineVote/
 
 ---
 
-## 📚 Deep Dive Documentation
+## Deep Dive Documentation
 
-- 🔗 **[Architecture Documentation](./docs/Architecture.md)**: Explore the design decisions and data flows.
-- 🚀 **[Deployment Guide](./docs/Deployment.md)**: Step-by-step instructions for a clean setup.
-- 🔧 **[Troubleshooting](./docs/Troubleshooting.md)**: Common issues and how to fix them.
+- [Architecture Documentation](./docs/Architecture.md): Explore the design decisions and data flows.
+- [Deployment Guide](./docs/Deployment.md): Step-by-step instructions for a clean setup.
+- [Troubleshooting](./docs/Troubleshooting.md): Common issues and how to fix them.
 
 ---
 
-## 🛡️ Security Note
+## Security Note
 
 This project strictly follows the **Principle of Least Privilege**. All compute resources are isolated in private subnets, and access is managed via restricted IAM policies and security group white-listing.

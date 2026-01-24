@@ -23,7 +23,8 @@ resource "aws_security_group" "alb_sg" {
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
-    cidr_blocks = concat(var.allowed_ips, data.github_ip_ranges.hooks.hooks)
+    cidr_blocks = concat(var.allowed_ips, [for ip in data.github_ip_ranges.hooks.hooks : ip if !strcontains(ip, ":")])
+    ipv6_cidr_blocks = [for ip in data.github_ip_ranges.hooks.hooks : ip if strcontains(ip, ":")]
   }
 
   egress {
@@ -94,43 +95,7 @@ resource "aws_security_group" "db_sg" {
   }
 }
 
-# --- ACM Certificate ---
-
-resource "aws_acm_certificate" "jenkins" {
-  domain_name               = "jenkins.${var.domain_name}"
-  subject_alternative_names = [var.domain_name]
-  validation_method         = "DNS"
-
-  tags = {
-    Name = "${var.project_name}-cert"
-  }
-
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-
-resource "aws_route53_record" "cert_validation" {
-  for_each = {
-    for dvo in aws_acm_certificate.jenkins.domain_validation_options : dvo.domain_name => {
-      name   = dvo.resource_record_name
-      record = dvo.resource_record_value
-      type   = dvo.resource_record_type
-    }
-  }
-
-  allow_overwrite = true
-  name            = each.value.name
-  records         = [each.value.record]
-  ttl             = 60
-  type            = each.value.type
-  zone_id         = var.zone_id
-}
-
-resource "aws_acm_certificate_validation" "jenkins" {
-  certificate_arn         = aws_acm_certificate.jenkins.arn
-  validation_record_fqdns = [for record in aws_route53_record.cert_validation : record.fqdn]
-}
+# ACM and Route 53 validation removed for path-based routing.
 
 # --- SSM Parameters ---
 
@@ -171,9 +136,6 @@ module "alb" {
   vpc_id             = module.vpc.vpc_id
   public_subnet_ids  = module.vpc.public_subnet_ids
   security_group_ids = [aws_security_group.alb_sg.id]
-  certificate_arn    = aws_acm_certificate_validation.jenkins.certificate_arn
-  zone_id            = var.zone_id
-  domain_name        = var.domain_name
 }
 
 module "ec2" {

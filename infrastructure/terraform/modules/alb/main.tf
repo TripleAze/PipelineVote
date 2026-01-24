@@ -86,29 +86,11 @@ resource "aws_lb_target_group" "jenkins" {
   }
 }
 
-# Listener for HTTP (Redirect to HTTPS)
+# Listener for HTTP
 resource "aws_lb_listener" "http" {
   load_balancer_arn = aws_lb.main.arn
   port              = "80"
   protocol          = "HTTP"
-
-  default_action {
-    type = "redirect"
-    redirect {
-      port        = "443"
-      protocol    = "HTTPS"
-      status_code = "HTTP_301"
-    }
-  }
-}
-
-# Listener for HTTPS
-resource "aws_lb_listener" "https" {
-  load_balancer_arn = aws_lb.main.arn
-  port              = "443"
-  protocol          = "HTTPS"
-  ssl_policy        = "ELBSecurityPolicy-2016-08"
-  certificate_arn   = var.certificate_arn
 
   default_action {
     type             = "forward"
@@ -118,7 +100,7 @@ resource "aws_lb_listener" "https" {
 
 # Routing rules
 resource "aws_lb_listener_rule" "jenkins" {
-  listener_arn = aws_lb_listener.https.arn
+  listener_arn = aws_lb_listener.http.arn
   priority     = 100
 
   action {
@@ -127,34 +109,12 @@ resource "aws_lb_listener_rule" "jenkins" {
   }
 
   condition {
-    host_header {
-      values = ["jenkins.${var.domain_name}"]
+    path_pattern {
+      values = ["/jenkins*"]
     }
   }
 }
 
 
 
-resource "aws_route53_record" "app" {
-  zone_id = var.zone_id
-  name    = var.domain_name
-  type    = "A"
-
-  alias {
-    name                   = aws_lb.main.dns_name
-    zone_id                = aws_lb.main.zone_id
-    evaluate_target_health = true
-  }
-}
-
-resource "aws_route53_record" "jenkins" {
-  zone_id = var.zone_id
-  name    = "jenkins.${var.domain_name}"
-  type    = "A"
-
-  alias {
-    name                   = aws_lb.main.dns_name
-    zone_id                = aws_lb.main.zone_id
-    evaluate_target_health = true
-  }
-}
+# Route 53 records removed as requested.

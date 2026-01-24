@@ -2,7 +2,7 @@
 
 This document tracks the journey of the **PipelineVote** project, detailing the challenges faced, bugs resolved, and the continuous improvements made to transform the codebase into a production-ready infrastructure.
 
-## 📈 Milestones & Improvements
+## Milestones & Improvements
 
 ### 1. From Static to Dynamic
 - **Initial State**: The application was deployed on a single, static EC2 instance.
@@ -21,11 +21,11 @@ This document tracks the journey of the **PipelineVote** project, detailing the 
 
 ---
 
-## 🐛 Notable Bugs & Solutions
+## Notable Bugs & Solutions
 
 ### The "Circular Dependency" Deadlock
-- **The Issue**: We tried to store the RDS Host in a Secrets Manager secret. However, the RDS instance needed the secret for its password, but the secret needed the RDS host (which isn't known until *after* RDS is created).
-- **The Solution**: We decoupled the configuration.
+- **The Issue**: I tried to store the RDS Host in a Secrets Manager secret. However, the RDS instance needed the secret for its password, but the secret needed the RDS host (which isn't known until *after* RDS is created).
+- **The Solution**: I decoupled the configuration.
     - **Secrets Manager**: Now only stores static credentials (username/password).
     - **SSM Parameter Store**: Stores dynamic metadata (host, port).
 - **Result**: Fully automated, single-run deployments are now possible.
@@ -40,7 +40,7 @@ This document tracks the journey of the **PipelineVote** project, detailing the 
 
 ---
 
-## 🛡️ Security & Observability Upgrades
+## Security & Observability Upgrades
 
 - **Least Privilege**: Switched from broad IAM roles to custom policies (e.g., `secretsmanager:GetSecretValue` on specific ARNs).
 - **ALB Access Logs**: Enabled logging to S3 for auditing.

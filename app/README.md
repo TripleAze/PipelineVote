@@ -3,18 +3,18 @@ A full-stack voting application that allows users to cast votes on different opt
 
 ---
 
-## 🚀 Features  
+## Features  
 
-- ✅ User-friendly voting interface  
-- ✅ Admin panel to manage polls & results  
-- ✅ Real-time vote counting and display  
-- ✅ Secure database storage with MySQL  
-- ✅ Modular JSP pages with reusable header & footer  
-- ✅ Responsive UI with Bootstrap
+- User-friendly voting interface  
+- Admin panel to manage polls & results  
+- Real-time vote counting and display  
+- Secure database storage with MySQL  
+- Modular JSP pages with reusable header & footer  
+- Responsive UI with Bootstrap
 
 ---
 
-## 🛠️ Tech Stack  
+## Tech Stack  
 
 - **Frontend:** JSP, HTML5, CSS3, Bootstrap  
 - **Backend:** Java Servlets, JSP  
@@ -23,7 +23,7 @@ A full-stack voting application that allows users to cast votes on different opt
 
 ---
 
-## 📂 Project Structure  
+## Project Structure  
 
 VotingApp/
 │── src/ # Java source files (Servlets, Database connection)
@@ -39,20 +39,20 @@ VotingApp/
 
 ---
 
-## ⚙️ Installation & Setup  
+## Installation & Setup  
 
-### 1️⃣ Clone the repository  
+### 1. Clone the repository  
 ```bash
 git clone https://github.com/iamvikash28/VotingApp.git
 cd VotingApp
 ```
 
-2️⃣ Import into IDE
+2. Import into IDE
 - Open Eclipse / IntelliJ
 - Select Import as Dynamic Web Project
 - Configure Apache Tomcat as your server
 
-3️⃣ Setup MySQL Database
+3. Setup MySQL Database
 - Create a new database:
 ```bash
 CREATE DATABASE votingapp;
@@ -66,7 +66,7 @@ private static final String USER = "root";
 private static final String PASSWORD = "your_password";
 ```
 
-4️⃣ Run the Application
+4. Run the Application
 
 - Deploy on Tomcat server
 - Open in browser:
@@ -76,28 +76,28 @@ http://localhost:8080/VotingApp
 
 ---
 
-🎯 Usage
+Usage
 
-👤 User:
+User:
 - View categories of polls
 - Cast votes
 - See live results
 
-🛠️ Admin:
+Admin:
 - Add new categories
 - Manage polls
 - View statistics
 
 ---
-📌 Future Enhancements
+Future Enhancements
 
-- 🔐 User authentication & login system
-- 📊 Graphical representation of results
-- 🌐 Multi-language support
-- 📱 Mobile-friendly responsive UI
+- User authentication & login system
+- Graphical representation of results
+- Multi-language support
+- Mobile-friendly responsive UI
 
 ---
-🤝 Contributing
+Contributing
 - Fork the repo
 - Create a new branch (feature/your-feature)
 - Commit your changes
@@ -106,6 +106,6 @@ http://localhost:8080/VotingApp
 
 ---
 
-📄 License
+License
 
 This project is licensed under the MIT License – feel free to use and modify.

@@ -15,9 +15,7 @@ crash.*.log
 !infrastructure/terraform/terraform.tfvars.example
 
 # Terraform lock file
-# Decisions vary, but often kept in git for consistency. 
-# Remove the hash below if you want to ignore it.
-#.terraform.lock.hcl
+.terraform.lock.hcl
 
 # --- Jenkins ---
 # Jenkins workspace and internal data
