@@ -2,6 +2,8 @@
 
 A production-ready, highly secure, and fully automated infrastructure for a Spring Boot Java Voting Application.
 
+![Architecture Diagram](Vote-App-Architecture.jpg)
+
 [![Terraform](https://img.shields.io/badge/Infrastructure-Terraform-623CE4?logo=terraform)](https://www.terraform.io/)
 [![AWS](https://img.shields.io/badge/Cloud-AWS-232F3E?logo=amazon-aws)](https://aws.amazon.com/)
 [![Jenkins](https://img.shields.io/badge/CI%2FCD-Jenkins-D24939?logo=jenkins)](https://www.jenkins.io/)
