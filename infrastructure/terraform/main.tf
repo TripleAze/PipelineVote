@@ -59,10 +59,10 @@ resource "aws_security_group" "alb_sg" {
   }
 
   ingress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = concat(var.allowed_ips, [for ip in data.github_ip_ranges.hooks.hooks : ip if !strcontains(ip, ":")])
+    from_port        = 443
+    to_port          = 443
+    protocol         = "tcp"
+    cidr_blocks      = concat(var.allowed_ips, [for ip in data.github_ip_ranges.hooks.hooks : ip if !strcontains(ip, ":")])
     ipv6_cidr_blocks = [for ip in data.github_ip_ranges.hooks.hooks : ip if strcontains(ip, ":")]
   }
 
@@ -156,7 +156,7 @@ resource "aws_ssm_parameter" "db_port" {
 
 module "secrets" {
   source       = "./modules/secrets"
-  secret_name  = "${var.project_name}-db-secrets"
+  secret_name  = "${var.project_name}-db-secrets-v2"
   project_name = var.project_name
 }
 
@@ -167,6 +167,7 @@ module "rds" {
   private_subnet_ids = module.vpc.private_subnet_ids
   security_group_ids = [aws_security_group.db_sg.id]
   secret_id          = module.secrets.secret_id
+  db_password        = module.secrets.db_password
 }
 
 module "alb" {
@@ -178,14 +179,14 @@ module "alb" {
 }
 
 module "ec2" {
-  source                = "./modules/ec2"
-  project_name          = var.project_name
-  environment           = var.environment
-  ami_id                = var.ami_id
-  vpc_id                = module.vpc.vpc_id
-  subnet_ids            = module.vpc.private_subnet_ids
-  secret_arns           = [module.secrets.secret_arn]
-  app_target_group_arns = [module.alb.app_target_group_arn]
+  source                   = "./modules/ec2"
+  project_name             = var.project_name
+  environment              = var.environment
+  ami_id                   = var.ami_id
+  vpc_id                   = module.vpc.vpc_id
+  subnet_ids               = module.vpc.private_subnet_ids
+  secret_arns              = [module.secrets.secret_arn]
+  app_target_group_arns    = [module.alb.app_target_group_arn]
   ssm_transport_bucket_arn = aws_s3_bucket.ansible_ssm.arn
   instances = {
     "jenkins-server" = {

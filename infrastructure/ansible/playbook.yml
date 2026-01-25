@@ -13,7 +13,7 @@
     db_url: "jdbc:mysql://{{ db_host }}:3306/votingdb?useSSL=false&allowPublicKeyRetrieval=true"
     db_username: "{{ db_user | default('admin') }}"
     db_password: "{{ db_pass | default('password') }}"
-    artifact_path: "../../app/target/VotingApp-0.0.1-SNAPSHOT.jar"
+    artifact_path: "../../app/target/MySpring_Boot_aa23v_VotingApp_Final-0.0.1-SNAPSHOT.jar"
   roles:
     - common
     - app

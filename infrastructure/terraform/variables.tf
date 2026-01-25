@@ -18,7 +18,7 @@ variable "environment" {
 variable "ami_id" {
   description = "AMI ID for EC2 instances"
   type        = string
-  default     = "ami-09a2a0f7d2db8baca"
+  default     = "ami-01ec84b284795cbc7" # Ubuntu 22.04 LTS (eu-west-2)
 }
 
 variable "zone_id" {

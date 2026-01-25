@@ -22,10 +22,10 @@ resource "aws_db_instance" "main" {
   instance_class         = var.db_instance_class
   db_name                = local.db_creds.db_name
   username               = local.db_creds.username
-  password               = local.db_creds.password
+  password               = var.db_password
   db_subnet_group_name   = aws_db_subnet_group.main.name
   vpc_security_group_ids = var.security_group_ids
-  skip_final_snapshot    = false
+  skip_final_snapshot    = true
   final_snapshot_identifier = "${var.project_name}-final-snapshot"
   publicly_accessible    = false
   storage_encrypted      = true
