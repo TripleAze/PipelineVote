@@ -71,9 +71,9 @@ resource "aws_iam_instance_profile" "ec2_profile" {
 resource "aws_instance" "app" {
   for_each = { for k, v in var.instances : k => v if v.role != "app" }
 
-  ami                    = var.ami_id
+  ami                    = coalesce(each.value.ami_id, var.ami_id)
   instance_type          = each.value.instance_type
-  subnet_id              = var.subnet_ids[0] # Simplification, could be randomized or indexed
+  subnet_id              = var.subnet_ids[0] 
   vpc_security_group_ids = each.value.security_group_ids
   iam_instance_profile   = aws_iam_instance_profile.ec2_profile.name
 
@@ -89,7 +89,7 @@ resource "aws_instance" "app" {
 
 resource "aws_launch_template" "app" {
   name_prefix   = "${var.project_name}-app-lt-"
-  image_id      = var.ami_id
+  image_id      = coalesce(var.instances["app-server"].ami_id, var.ami_id)
   instance_type = "t3.micro"
 
   network_interfaces {

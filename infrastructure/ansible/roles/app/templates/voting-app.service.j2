@@ -3,7 +3,7 @@ Description=Voting Application
 After=network.target
 
 [Service]
-User=ubuntu
+User=voting-app
 WorkingDirectory=/opt/voting-app
 Environment="DB_URL={{ db_url }}"
 Environment="DB_USERNAME={{ db_username }}"

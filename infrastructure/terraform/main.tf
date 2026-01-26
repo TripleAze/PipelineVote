@@ -194,6 +194,7 @@ module "ec2" {
       name               = "jenkins-server"
       role               = "jenkins"
       security_group_ids = [aws_security_group.jenkins_sg.id]
+      ami_id             = "ami-0d2164f0ac41dc4a0"
     }
     "app-server" = {
       instance_type      = "t3.micro"

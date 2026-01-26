@@ -1,35 +1,10 @@
 ---
-- name: Install Jenkins dependencies
-  apt:
-    name:
-      - fontconfig
-      - openjdk-17-jre
-    state: present
-  become: yes
-
-- name: Download Jenkins repository key
-  shell: |
-    curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io-2026.key | gpg --dearmor -o /usr/share/keyrings/jenkins.gpg
-  become: yes
-
-- name: Add Jenkins repository
-  apt_repository:
-    repo: deb [signed-by=/usr/share/keyrings/jenkins.gpg] https://pkg.jenkins.io/debian-stable binary/
-    state: present
-    filename: jenkins
-  become: yes
-
-- name: Install Jenkins
-  apt:
-    name: jenkins
-    state: present
-  become: yes
-
-- name: Configure Jenkins prefix
+- name: Disable Jenkins setup wizard
   lineinfile:
     path: /lib/systemd/system/jenkins.service
-    regexp: '^Environment="JENKINS_PREFIX='
-    line: 'Environment="JENKINS_PREFIX=/jenkins"'
+    regexp: '^Environment="JAVA_OPTS='
+    line: 'Environment="JAVA_OPTS=-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false"'
+    insertafter: '\[Service\]'
   become: yes
   notify:
     - reload systemd
@@ -40,6 +15,16 @@
     name: jenkins
     enabled: yes
     state: started
+  become: yes
+
+- name: Wait for Jenkins to be ready
+  uri:
+    url: "http://localhost:8080/login"
+    status_code: 200
+  register: jenkins_up
+  retries: 30
+  delay: 10
+  until: jenkins_up.status == 200
   become: yes
 
 - name: Wait for Jenkins initialAdminPassword file to be created
@@ -64,3 +49,27 @@
     region: "eu-west-2"
     overwrite: yes
   delegate_to: localhost
+
+- name: Download Jenkins CLI
+  get_url:
+    url: "http://localhost:8080/jnlpJars/jenkins-cli.jar"
+    dest: /opt/jenkins-cli.jar
+    mode: '0755'
+  become: yes
+
+- name: Install Jenkins plugins
+  command: >
+    java -jar /opt/jenkins-cli.jar
+    -s http://localhost:8080
+    install-plugin {{ item }} -deploy
+  loop: "{{ jenkins_plugins }}"
+  register: plugin_install
+  changed_when: "'Installed' in plugin_install.stdout"
+  become: yes
+
+- name: Restart Jenkins if plugins installed
+  service:
+    name: jenkins
+    state: restarted
+  when: plugin_install.changed
+  become: yes

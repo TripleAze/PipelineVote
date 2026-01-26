@@ -1,18 +1,33 @@
 ---
+- name: Create application group
+  group:
+    name: voting-app
+    state: present
+  become: yes
+
+- name: Create application user
+  user:
+    name: voting-app
+    group: voting-app
+    shell: /sbin/nologin
+    system: yes
+    state: present
+  become: yes
+
 - name: Create application directory
   file:
     path: /opt/voting-app
     state: directory
-    owner: ubuntu
-    group: ubuntu
+    owner: voting-app
+    group: voting-app
   become: yes
 
 - name: Copy application JAR
   copy:
     src: "{{ artifact_path }}"
     dest: /opt/voting-app/voting-app.jar
-    owner: ubuntu
-    group: ubuntu
+    owner: voting-app
+    group: voting-app
   become: yes
 
 - name: Configure systemd service

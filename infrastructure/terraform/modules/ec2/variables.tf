@@ -5,6 +5,7 @@ variable "instances" {
     name               = string
     role               = string
     security_group_ids = list(string)
+    ami_id             = optional(string)
   }))
 }
 
