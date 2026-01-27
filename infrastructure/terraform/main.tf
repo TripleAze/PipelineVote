@@ -134,8 +134,6 @@ resource "aws_security_group" "db_sg" {
   }
 }
 
-# ACM and Route 53 validation removed for path-based routing.
-
 # --- SSM Parameters ---
 
 resource "aws_ssm_parameter" "db_host" {
@@ -150,6 +148,13 @@ resource "aws_ssm_parameter" "db_port" {
   description = "RDS database port"
   type        = "String"
   value       = "3306"
+}
+
+resource "aws_ssm_parameter" "db_secret_id" {
+  name        = "/${var.project_name}/db_secret_id"
+  description = "RDS database secrets ID"
+  type        = "String"
+  value       = module.secrets.secret_id
 }
 
 # --- Module Calls ---
@@ -168,6 +173,7 @@ module "rds" {
   security_group_ids = [aws_security_group.db_sg.id]
   secret_id          = module.secrets.secret_id
   db_password        = module.secrets.db_password
+  depends_on         = [module.secrets]
 }
 
 module "alb" {
@@ -190,7 +196,7 @@ module "ec2" {
   ssm_transport_bucket_arn = aws_s3_bucket.ansible_ssm.arn
   instances = {
     "jenkins-server" = {
-      instance_type      = "t3.medium"
+      instance_type      = "t3.large"
       name               = "jenkins-server"
       role               = "jenkins"
       security_group_ids = [aws_security_group.jenkins_sg.id]

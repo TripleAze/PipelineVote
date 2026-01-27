@@ -8,11 +8,19 @@
     - name: Fetch DB host from SSM
       set_fact:
         db_host: "{{ lookup('amazon.aws.aws_ssm', '/voting-app-dev/db_host', region='eu-west-2') }}"
+
+    - name: Fetch Secret ID from SSM
+      set_fact:
+        db_secret_id: "{{ lookup('amazon.aws.aws_ssm', '/voting-app-dev/db_secret_id', region='eu-west-2') }}"
+
+    - name: Fetch DB credentials from Secrets Manager
+      set_fact:
+        db_creds: "{{ lookup('amazon.aws.aws_secret', db_secret_id, region='eu-west-2') | from_json }}"
+      no_log: true
   vars:
-    # These variables should be passed at runtime or fetched from Secrets Manager
-    db_url: "jdbc:mysql://{{ db_host }}:3306/votingdb?useSSL=false&allowPublicKeyRetrieval=true"
-    db_username: "{{ db_user | default('admin') }}"
-    db_password: "{{ db_pass | default('password') }}"
+    db_url: "jdbc:mysql://{{ db_host }}:3306/{{ db_creds.db_name }}?useSSL=false&allowPublicKeyRetrieval=true"
+    db_username: "{{ db_creds.username }}"
+    db_password: "{{ db_creds.password }}"
     artifact_path: "../../app/target/MySpring_Boot_aa23v_VotingApp_Final-0.0.1-SNAPSHOT.jar"
   roles:
     - common

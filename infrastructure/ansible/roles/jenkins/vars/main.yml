@@ -14,8 +14,8 @@ jenkins_plugins:
   - aws-java-sdk
   - cloudbees-credentials
   - cloudbees-folder
-  - ansiColor
-  - timestamps
+  - ansicolor
+  - timestamper
   - build-timeout
   - rebuild
   - ws-cleanup

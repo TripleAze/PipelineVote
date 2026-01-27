@@ -1,14 +1,26 @@
 ---
-- name: Disable Jenkins setup wizard
-  lineinfile:
-    path: /lib/systemd/system/jenkins.service
-    regexp: '^Environment="JAVA_OPTS='
-    line: 'Environment="JAVA_OPTS=-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false"'
-    insertafter: '\[Service\]'
+- name: Create Jenkins systemd override directory
+  file:
+    path: /etc/systemd/system/jenkins.service.d
+    state: directory
+    mode: '0755'
+  become: yes
+
+- name: Configure Jenkins environment variables via override
+  copy:
+    dest: /etc/systemd/system/jenkins.service.d/override.conf
+    content: |
+      [Service]
+      Environment="JENKINS_OPTS=--prefix=/jenkins"
+      Environment="JAVA_OPTS=-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false"
+    mode: '0644'
   become: yes
   notify:
     - reload systemd
     - restart jenkins
+    
+- name: Force Jenkins to restart with new configuration
+  meta: flush_handlers
 
 - name: Ensure Jenkins is started and enabled
   systemd:
@@ -19,12 +31,13 @@
 
 - name: Wait for Jenkins to be ready
   uri:
-    url: "http://localhost:8080/login"
-    status_code: 200
+    url: "http://localhost:8080/jenkins/login"
+    status_code: [200, 403]
+    validate_certs: no
   register: jenkins_up
-  retries: 30
-  delay: 10
-  until: jenkins_up.status == 200
+  retries: 60
+  delay: 5
+  until: jenkins_up.status in [200, 403]
   become: yes
 
 - name: Wait for Jenkins initialAdminPassword file to be created
@@ -47,12 +60,12 @@
     value: "{{ jenkins_password_b64.content | b64decode | trim }}"
     string_type: "SecureString"
     region: "eu-west-2"
-    overwrite: yes
+    overwrite_value: "always"
   delegate_to: localhost
 
 - name: Download Jenkins CLI
   get_url:
-    url: "http://localhost:8080/jnlpJars/jenkins-cli.jar"
+    url: "http://localhost:8080/jenkins/jnlpJars/jenkins-cli.jar"
     dest: /opt/jenkins-cli.jar
     mode: '0755'
   become: yes
@@ -60,7 +73,8 @@
 - name: Install Jenkins plugins
   command: >
     java -jar /opt/jenkins-cli.jar
-    -s http://localhost:8080
+    -s http://localhost:8080/jenkins
+    -auth admin:{{ jenkins_password_b64.content | b64decode | trim }}
     install-plugin {{ item }} -deploy
   loop: "{{ jenkins_plugins }}"
   register: plugin_install

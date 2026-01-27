@@ -26,6 +26,22 @@ pipeline {
             }
         }
 
+        stage('Terraform Format') {
+            steps {
+                dir('infrastructure/terraform') {
+                    sh 'terraform fmt -check'
+                }
+            }
+        }
+
+        stage('Terraform Validate') {
+            steps {
+                dir('infrastructure/terraform') {
+                    sh 'terraform validate'
+                }
+            }
+        }
+
         stage('Terraform Plan') {
             when {
                 expression { params.ACTION == 'plan' || params.ACTION == 'apply' }
