@@ -42,13 +42,41 @@ pipeline {
             }
         }
 
+        stage('Fetch Config from SSM') {
+            steps {
+                dir('infrastructure/terraform') {
+                    script {
+                        def params_json = sh(
+                            script: "aws ssm get-parameters-by-path --path '/config/${params.ENVIRONMENT}/' --region ${env.AWS_REGION} --query 'Parameters[*].[Name,Value]' --output json",
+                            returnStdout: true
+                        ).trim()
+                        
+                        // Parse JSON and create tfvars content
+                        def params_list = readJSON text: params_json
+                        def tfvars_content = ""
+                        params_list.each { p ->
+                            def name = p[0].split('/').last()
+                            def value = p[1]
+                            if (name == "allowed_ips") {
+                                tfvars_content += "${name} = [\"${value}\"]\n"
+                            } else {
+                                tfvars_content += "${name} = \"${value}\"\n"
+                            }
+                        }
+                        writeFile file: 'ssm.auto.tfvars', text: tfvars_content
+                        sh "cat ssm.auto.tfvars" // Debugging
+                    }
+                }
+            }
+        }
+
         stage('Terraform Plan') {
             when {
                 expression { params.ACTION == 'plan' || params.ACTION == 'apply' }
             }
             steps {
                 dir('infrastructure/terraform') {
-                    sh "terraform plan -var-file=envs/${params.ENVIRONMENT}.tfvars -out=tfplan"
+                    sh "terraform plan -out=tfplan"
                 }
             }
         }
@@ -92,7 +120,7 @@ pipeline {
             }
             steps {
                 dir('infrastructure/terraform') {
-                    sh "terraform destroy -var-file=envs/${params.ENVIRONMENT}.tfvars -auto-approve"
+                    sh "terraform destroy -auto-approve"
                 }
             }
         }
