@@ -51,7 +51,6 @@ pipeline {
                             returnStdout: true
                         ).trim()
                         
-                        // Parse JSON and create tfvars content
                         def params_list = readJSON text: params_json
                         def tfvars_content = ""
                         params_list.each { p ->

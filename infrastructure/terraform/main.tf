@@ -3,16 +3,9 @@ module "vpc" {
   project_name = var.project_name
 }
 
-data "github_ip_ranges" "hooks" {}
 data "aws_caller_identity" "current" {}
 
-# --- IAM / OIDC ---
-
-resource "aws_iam_openid_connect_provider" "github" {
-  url             = "https://token.actions.githubusercontent.com"
-  client_id_list  = ["sts.amazonaws.com"]
-  thumbprint_list = ["6938fd4d98bab03faadb97b34396831e3780aea1", "1c58a3a8518e8759bf075b76b750d4f2df264fcd"]
-}
+# --- S3 Bucket ---
 
 resource "aws_s3_bucket" "ansible_ssm" {
   bucket        = "${var.project_name}-ansible-ssm-transport"
@@ -31,17 +24,6 @@ resource "aws_s3_bucket_public_access_block" "ansible_ssm" {
   block_public_policy     = true
   ignore_public_acls      = true
   restrict_public_buckets = true
-}
-
-module "iam" {
-  source                      = "./modules/iam"
-  project_name                = var.project_name
-  environment                 = var.environment
-  github_repo                 = var.github_repo
-  openid_connect_provider_arn = aws_iam_openid_connect_provider.github.arn
-  region                      = var.region
-  account_id                  = data.aws_caller_identity.current.account_id
-  ssm_transport_bucket_arn    = aws_s3_bucket.ansible_ssm.arn
 }
 
 # --- Security Groups ---
@@ -215,8 +197,4 @@ resource "aws_lb_target_group_attachment" "jenkins" {
   target_group_arn = module.alb.jenkins_target_group_arn
   target_id        = module.ec2.instance_ids_map["jenkins-server"]
   port             = 8080
-}
-
-output "github_actions_role_arn" {
-  value = module.iam.github_actions_role_arn
 }

@@ -19,7 +19,7 @@ resource "aws_lb" "main" {
 }
 
 resource "aws_s3_bucket" "logs" {
-  bucket        = "${var.project_name}-alb-logs-${var.project_name}" # Needs to be unique
+  bucket        = "${var.project_name}-alb-logs-${var.project_name}"
   force_destroy = true
 }
 
