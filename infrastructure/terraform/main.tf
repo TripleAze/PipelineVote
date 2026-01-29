@@ -44,8 +44,8 @@ resource "aws_security_group" "alb_sg" {
     from_port        = 443
     to_port          = 443
     protocol         = "tcp"
-    cidr_blocks      = concat(var.allowed_ips, [for ip in data.github_ip_ranges.hooks.hooks : ip if !strcontains(ip, ":")])
-    ipv6_cidr_blocks = [for ip in data.github_ip_ranges.hooks.hooks : ip if strcontains(ip, ":")]
+    cidr_blocks      = var.allowed_ips
+    ipv6_cidr_blocks = []
   }
 
   egress {
