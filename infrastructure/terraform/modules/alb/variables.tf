@@ -27,11 +27,26 @@ variable "certificate_arn" {
 variable "domain_name" {
   description = "Custom domain name"
   type        = string
-  default     = "voting-portal.chickenkiller.com"
+  default     = "abu.work"
 }
 
-variable "zone_id" {
-  description = "Route 53 hosted zone ID"
+variable "cloudflare_api_token" {
+  description = "Cloudflare auth key"
   type        = string
-  default     = null
+}
+
+variable "cloudflare_zone_id" {
+  description = "Cloudflare Zone ID"
+  type        = string
+}
+
+variable "cname_labels" {
+  description = "Cloudflare Zone name"
+  type        = list(string)
+  default     = ["staging", "prod", "dev"]
+}
+
+variable "cloudflare_proxied" {
+  type    = bool
+  default = true
 }

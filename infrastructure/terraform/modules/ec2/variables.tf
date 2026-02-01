@@ -1,11 +1,12 @@
 variable "instances" {
   description = "Map of instances to create"
   type = map(object({
-    instance_type      = string
-    name               = string
-    role               = string
-    security_group_ids = list(string)
-    ami_id             = optional(string)
+    instance_type           = string
+    name                    = string
+    role                    = string
+    security_group_ids      = list(string)
+    ami_id                  = optional(string)
+    root_block_device_size  = optional(number)
   }))
 }
 

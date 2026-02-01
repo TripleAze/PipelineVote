@@ -63,6 +63,31 @@ resource "aws_iam_role_policy_attachment" "secrets_policy" {
   policy_arn = aws_iam_policy.secrets_restricted.arn
 }
 
+resource "aws_iam_policy" "ssm_config_access" {
+  name        = "${var.project_name}-ssm-config-policy"
+  description = "Allow access to SSM configuration parameters"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "ssm:GetParametersByPath",
+          "ssm:GetParameters",
+          "ssm:GetParameter"
+        ]
+        Effect   = "Allow"
+        Resource = "arn:aws:ssm:*:*:parameter/config/*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "ssm_config_policy" {
+  role       = aws_iam_role.ec2_role.name
+  policy_arn = aws_iam_policy.ssm_config_access.arn
+}
+
 resource "aws_iam_instance_profile" "ec2_profile" {
   name = "${var.project_name}-ec2-profile"
   role = aws_iam_role.ec2_role.name
@@ -76,6 +101,11 @@ resource "aws_instance" "app" {
   subnet_id              = var.subnet_ids[0] 
   vpc_security_group_ids = each.value.security_group_ids
   iam_instance_profile   = aws_iam_instance_profile.ec2_profile.name
+
+  root_block_device {
+    volume_size = coalesce(each.value.root_block_device_size, 8)
+    volume_type = "gp3"
+  }
 
   tags = {
     Name         = each.value.name
@@ -95,6 +125,14 @@ resource "aws_launch_template" "app" {
   network_interfaces {
     associate_public_ip_address = false
     security_groups             = var.instances["app-server"].security_group_ids
+  }
+
+  block_device_mappings {
+    device_name = "/dev/xvda"
+    ebs {
+      volume_size = coalesce(var.instances["app-server"].root_block_device_size, 8)
+      volume_type = "gp3"
+    }
   }
 
   iam_instance_profile {

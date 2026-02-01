@@ -24,23 +24,38 @@ variable "ami_id" {
 variable "zone_id" {
   description = "Route 53 hosted zone ID"
   type        = string
-  default     = "Z0123456789ABCDEF" # Placeholder
+  default     = "Z0123456789ABCDEF"
+}
+
+variable "cloudflare_zone_id" {
+  type = string
+}
+
+variable "cloudflare_api_token" {
+  type      = string
+  sensitive = true
 }
 
 variable "domain_name" {
   description = "Domain name for the application"
   type        = string
-  default     = "voting-portal.chickenkiller.com"
+  default     = "abu.work"
 }
 
 variable "allowed_ips" {
   description = "List of CIDR blocks allowed to access the ALB"
   type        = list(string)
-  default     = ["0.0.0.0/0"] # Default to open, but documented as restricted
+  default     = ["0.0.0.0/0"]
 }
 
-variable "github_repo" {
-  description = "GitHub repository (owner/repo)"
-  type        = string
-  default     = "TripleAze/PipelineVote"
+variable "cname_labels" {
+  description = "List of CNAME labels for Cloudflare"
+  type        = list(string)
+  default     = ["staging", "prod", "dev"]
+}
+
+variable "cloudflare_proxied" {
+  description = "Whether Cloudflare records should be proxied"
+  type        = bool
+  default     = true
 }

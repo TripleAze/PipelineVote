@@ -159,12 +159,24 @@ module "rds" {
 }
 
 module "alb" {
-  source             = "./modules/alb"
-  project_name       = var.project_name
-  vpc_id             = module.vpc.vpc_id
-  public_subnet_ids  = module.vpc.public_subnet_ids
-  security_group_ids = [aws_security_group.alb_sg.id]
+  source               = "./modules/alb"
+  project_name         = var.project_name
+  vpc_id               = module.vpc.vpc_id
+  public_subnet_ids    = module.vpc.public_subnet_ids
+  security_group_ids   = [aws_security_group.alb_sg.id]
+  certificate_arn      = module.acm.certificate_arn
+  cloudflare_zone_id   = var.cloudflare_zone_id
+  cloudflare_api_token = var.cloudflare_api_token
 }
+
+module "acm" {
+  source               = "./modules/acm"
+  project_name         = var.project_name
+  domain_name          = var.domain_name
+  cloudflare_zone_id   = var.cloudflare_zone_id
+  cloudflare_api_token = var.cloudflare_api_token
+}
+
 
 module "ec2" {
   source                   = "./modules/ec2"
@@ -178,11 +190,12 @@ module "ec2" {
   ssm_transport_bucket_arn = aws_s3_bucket.ansible_ssm.arn
   instances = {
     "jenkins-server" = {
-      instance_type      = "t3.large"
-      name               = "jenkins-server"
-      role               = "jenkins"
-      security_group_ids = [aws_security_group.jenkins_sg.id]
-      ami_id             = "ami-0d2164f0ac41dc4a0"
+      instance_type          = "t3.large"
+      name                   = "jenkins-server"
+      role                   = "jenkins"
+      security_group_ids     = [aws_security_group.jenkins_sg.id]
+      ami_id                 = "ami-0d2164f0ac41dc4a0"
+      root_block_device_size = 40
     }
     "app-server" = {
       instance_type      = "t3.micro"

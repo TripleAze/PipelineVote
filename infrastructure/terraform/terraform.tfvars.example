@@ -4,8 +4,8 @@ region       = "eu-west-2"
 environment  = "dev" # Change to staging or prod as needed
 
 # Network & Domain
-zone_id     = "Z0123456789ABCDEF"
-domain_name = "voting-portal.chickenkiller.com"
+zone_id     = "6d4f26650ae1f92675a6f11aad2196a5"
+domain_name = "abu.work"
 
 # Instance Configuration
 ami_id = "ami-09a2a0f7d2db8baca"
