@@ -39,7 +39,7 @@ variable "cloudflare_api_token" {
 variable "domain_name" {
   description = "Domain name for the application"
   type        = string
-  default     = "abu.work"
+  default     = "limanalhassan.work"
 }
 
 variable "allowed_ips" {

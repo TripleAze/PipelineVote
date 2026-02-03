@@ -5,7 +5,8 @@
   become: yes
 
 - name: restart voting-app
-  systemd:
+  become: yes
+  service:
     name: voting-app
     state: restarted
-  become: yes
+  when: ansible_service_mgr == "systemd"

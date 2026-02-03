@@ -19,8 +19,8 @@
     - reload systemd
     - restart jenkins
     
-- name: Force Jenkins to restart with new configuration
-  meta: flush_handlers
+# - name: Force Jenkins to restart with new configuration
+#   meta: flush_handlers
 
 - name: Ensure Jenkins is started and enabled
   systemd:

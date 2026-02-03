@@ -1,4 +1,17 @@
 ---
+- name: Wait for cloud-init to finish
+  become: yes
+  wait_for:
+    path: /var/lib/cloud/instance/boot-finished
+    timeout: 300
+
+- name: Reload systemd and wait
+  become: yes
+  shell: |
+    systemctl daemon-reexec
+    systemctl is-system-running --wait
+  changed_when: false
+
 - name: Create application group
   group:
     name: voting-app
@@ -39,12 +52,12 @@
     - reload systemd
     - restart voting-app
 
-- name: Ensure voting-app is enabled and started
-  systemd:
-    name: voting-app
-    enabled: yes
-    state: started
+- name: Ensure voting-app is started
   become: yes
+  service:
+    name: voting-app
+    state: started
+    enabled: yes
 
 - name: Wait for application to be ready
   wait_for:
