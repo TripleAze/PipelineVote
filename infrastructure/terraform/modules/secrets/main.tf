@@ -1,6 +1,6 @@
 resource "random_password" "db_password" {
   length           = 16
-  special          = false
+  special          = true
 }
 
 resource "aws_secretsmanager_secret" "db_credentials" {
