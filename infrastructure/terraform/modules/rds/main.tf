@@ -30,6 +30,7 @@ resource "aws_db_instance" "main" {
   publicly_accessible    = false
   storage_encrypted      = true
   backup_retention_period = 4
+  apply_immediately      = true
 
   tags = {
     Name = "${var.project_name}-db"

@@ -31,6 +31,5 @@ resource "cloudflare_record" "validation" {
 
 resource "aws_acm_certificate_validation" "main" {
   certificate_arn         = aws_acm_certificate.main.arn
-  # Used trimsuffix to match the record names precisely as AWS expects them
   validation_record_fqdns = [for record in cloudflare_record.validation : trimsuffix(record.hostname, ".")]
 }

@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent maven
 
     parameters {
         choice(name: 'ENVIRONMENT', choices: ['dev', 'staging', 'prod'], description: 'Environment to deploy to')
@@ -129,7 +129,9 @@ pipeline {
 
     post {
         always {
-            cleanWs()
+            node('maven') {
+                cleanWs()
+            }
         }
     }
 }
