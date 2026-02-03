@@ -8,19 +8,19 @@ locals {
     dev = {
       project_name = "voting-app-dev"
       environment  = "dev"
-      domain_name  = "dev.abu.work"
+      domain_name  = "limanalhassan.work"
       allowed_ips  = "0.0.0.0/0"
     }
     staging = {
       project_name = "voting-app-staging"
       environment  = "staging"
-      domain_name  = "staging.abu.work"
+      domain_name  = "limanalhassan.work"
       allowed_ips  = "98.97.76.83"
     }
     prod = {
       project_name = "voting-app-prod"
       environment  = "prod"
-      domain_name  = "prod.abu.work"
+      domain_name  = "limanalhassan.work"
       allowed_ips  = "98.97.76.83"
     }
   }
