@@ -124,6 +124,7 @@ resource "aws_iam_policy" "ec2_infrastructure_mgmt" {
           "ec2:AssociateAddress",
           "ec2:DisassociateAddress",
           "ec2:DescribeAddresses",
+          "ec2:DescribeAddressesAttributes",
           "ec2:CreateSecurityGroup",
           "ec2:DeleteSecurityGroup",
           "ec2:DescribeSecurityGroups",
