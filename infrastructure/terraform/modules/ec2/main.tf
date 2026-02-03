@@ -105,7 +105,8 @@ resource "aws_iam_policy" "ec2_infrastructure_mgmt" {
           "iam:*",
           "secretsmanager:*",
           "rds:*",
-          "elasticloadbalancing:*"
+          "elasticloadbalancing:*",
+          "autoscaling:*"
         ]
         Effect   = "Allow"
         Resource = "*"
