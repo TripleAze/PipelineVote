@@ -1,5 +1,5 @@
 pipeline {
-    agent maven
+    agent { label 'Akaza'}
 
     parameters {
         choice(name: 'ENVIRONMENT', choices: ['dev', 'staging', 'prod'], description: 'Environment to deploy to')
@@ -129,9 +129,7 @@ pipeline {
 
     post {
         always {
-            node('maven') {
-                cleanWs()
-            }
+            cleanWs()
         }
     }
 }
