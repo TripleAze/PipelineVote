@@ -7,6 +7,7 @@ variable "instances" {
     security_group_ids      = list(string)
     ami_id                  = optional(string)
     root_block_device_size  = optional(number)
+    user_data               = optional(string)
   }))
 }
 

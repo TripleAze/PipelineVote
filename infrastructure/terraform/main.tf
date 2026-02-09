@@ -177,6 +177,18 @@ module "acm" {
 }
 
 
+locals {
+  ssm_agent_install_script = <<-EOT
+    #!/bin/bash
+    mkdir /tmp/ssm
+    cd /tmp/ssm
+    sudo wget https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/debian_amd64/amazon-ssm-agent.deb
+    sudo dpkg -i amazon-ssm-agent.deb
+    sudo systemctl enable amazon-ssm-agent
+    sudo systemctl start amazon-ssm-agent
+  EOT
+}
+
 module "ec2" {
   source                   = "./modules/ec2"
   project_name             = var.project_name
@@ -195,12 +207,14 @@ module "ec2" {
       security_group_ids     = [aws_security_group.jenkins_sg.id]
       ami_id                 = "ami-0d2164f0ac41dc4a0"
       root_block_device_size = 40
+      user_data              = local.ssm_agent_install_script
     }
     "app-server" = {
       instance_type      = "t3.micro"
       name               = "app-server"
       role               = "app"
       security_group_ids = [aws_security_group.app_sg.id]
+      user_data          = local.ssm_agent_install_script
     }
   }
 }

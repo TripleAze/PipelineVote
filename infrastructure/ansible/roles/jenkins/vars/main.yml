@@ -16,3 +16,4 @@ jenkins_plugins:
   - build-timeout
   - ws-cleanup
   - artifact-manager-s3
+  - aws-credentials

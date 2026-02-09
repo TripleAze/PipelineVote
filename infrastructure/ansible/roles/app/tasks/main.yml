@@ -52,6 +52,9 @@
     - reload systemd
     - restart voting-app
 
+- name: Force service reload/restart
+  meta: flush_handlers
+
 - name: Ensure voting-app is started
   become: yes
   service:

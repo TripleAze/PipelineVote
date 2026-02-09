@@ -1,10 +1,10 @@
 terraform {
   backend "s3" {
-    bucket         = "voting-app-dev-terraform-state-tc1wxq"
-    key            = "terraform.tfstate"
-    region         = "eu-west-2"
-    dynamodb_table = "voting-app-dev-terraform-locks"
-    encrypt        = true
+    bucket       = "voting-app-dev-terraform-state-6ty3ok"
+    key          = "terraform.tfstate"
+    region       = "eu-west-2"
+    use_lockfile = true
+    encrypt      = true
   }
 
   required_providers {

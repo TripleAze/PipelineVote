@@ -133,6 +133,7 @@ resource "aws_instance" "app" {
   subnet_id              = var.subnet_ids[0] 
   vpc_security_group_ids = each.value.security_group_ids
   iam_instance_profile   = aws_iam_instance_profile.ec2_profile.name
+  user_data              = each.value.user_data
 
   root_block_device {
     volume_size = coalesce(each.value.root_block_device_size, 8)
@@ -153,6 +154,7 @@ resource "aws_launch_template" "app" {
   name_prefix   = "${var.project_name}-app-lt-"
   image_id      = coalesce(var.instances["app-server"].ami_id, var.ami_id)
   instance_type = "t3.micro"
+  user_data     = var.instances["app-server"].user_data != null ? base64encode(var.instances["app-server"].user_data) : null
 
   network_interfaces {
     associate_public_ip_address = false

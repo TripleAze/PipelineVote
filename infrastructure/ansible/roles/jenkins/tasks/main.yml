@@ -32,12 +32,12 @@
 - name: Wait for Jenkins to be ready
   uri:
     url: "http://localhost:8080/jenkins/login"
-    status_code: [200, 403]
+    status_code: [200, 302]
     validate_certs: no
   register: jenkins_up
-  retries: 60
-  delay: 5
-  until: jenkins_up.status in [200, 403]
+  retries: 30
+  delay: 10
+  until: jenkins_up.status in [200, 302]
   become: yes
 
 - name: Wait for Jenkins initialAdminPassword file to be created
@@ -68,6 +68,11 @@
     url: "http://localhost:8080/jenkins/jnlpJars/jenkins-cli.jar"
     dest: /opt/jenkins-cli.jar
     mode: '0755'
+    force: yes
+  register: download_cli
+  until: download_cli is succeeded
+  retries: 5
+  delay: 10
   become: yes
 
 - name: Install Jenkins plugins
