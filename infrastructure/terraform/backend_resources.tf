@@ -1,11 +1,10 @@
-resource "random_string" "suffix" {
-  length  = 6
-  special = false
-  upper   = false
+# Using a fixed suffix for the state bucket to prevent drift when state is lost
+locals {
+  state_bucket_suffix = "v2"
 }
 
 resource "aws_s3_bucket" "terraform_state" {
-  bucket = "${var.project_name}-terraform-state-${random_string.suffix.result}"
+  bucket = "${var.project_name}-terraform-state-${local.state_bucket_suffix}"
 
   # Prevent accidental deletion of this S3 bucket
   lifecycle {

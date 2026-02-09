@@ -33,4 +33,4 @@
   gather_facts: yes
   roles:
     - common
-    - jenkins
+    - { role: jenkins, tags: ['jenkins'] }

@@ -122,6 +122,7 @@ resource "aws_ssm_parameter" "db_host" {
   description = "RDS database endpoint"
   type        = "String"
   value       = module.rds.db_address
+  overwrite   = true
 }
 
 resource "aws_ssm_parameter" "db_port" {
@@ -129,6 +130,7 @@ resource "aws_ssm_parameter" "db_port" {
   description = "RDS database port"
   type        = "String"
   value       = "3306"
+  overwrite   = true
 }
 
 resource "aws_ssm_parameter" "db_secret_id" {
@@ -136,6 +138,7 @@ resource "aws_ssm_parameter" "db_secret_id" {
   description = "RDS database secrets ID"
   type        = "String"
   value       = module.secrets.secret_id
+  overwrite   = true
 }
 
 # --- Module Calls ---

@@ -43,6 +43,7 @@ resource "aws_ssm_parameter" "config" {
   description = "Config for ${each.value.env} - ${each.value.key}"
   type        = "String"
   value       = each.value.value
+  overwrite   = true
 
   tags = {
     Environment = each.value.env
